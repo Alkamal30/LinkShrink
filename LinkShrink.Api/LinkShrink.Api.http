@@ -1,0 +1,6 @@
+@LinkShrink.Api_HostAddress = http://localhost:5265
+
+GET {{LinkShrink.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
