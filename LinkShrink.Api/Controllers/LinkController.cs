@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LinkShrink.Api.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LinkShrink.Api.Controllers;
 
@@ -6,14 +8,23 @@ namespace LinkShrink.Api.Controllers;
 [ApiController]
 public class LinkController : ControllerBase
 {
-    private static List<string> _links = new List<string>();
+    public LinkController(LinkShrinkDbContext context)
+    {
+        _context = context;
+    }
+
+
+    private readonly LinkShrinkDbContext _context;
+
 
     [HttpGet]
     public async Task<IActionResult> GetUrl(string url)
     {
-        if (_links.Contains(url))
+        Link? link = await _context.Links.FirstOrDefaultAsync(x => x.RedirectUrl == url);
+
+        if (link is not null)
         {
-            return Redirect("https://microsoft.com");
+            return Redirect(link.OriginUrl);
         }
 
         return NotFound();
@@ -27,7 +38,14 @@ public class LinkController : ControllerBase
             return BadRequest();
         }
 
-        _links.Add(url);
+        Link newLink = new Link
+        {
+            OriginUrl = url,
+            RedirectUrl = Guid.NewGuid().ToString()
+        };
+
+        await _context.Links.AddAsync(newLink);
+        await _context.SaveChangesAsync();
 
         return Ok();
     }

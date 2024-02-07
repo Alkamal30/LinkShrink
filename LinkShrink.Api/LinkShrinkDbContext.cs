@@ -5,8 +5,10 @@ namespace LinkShrink.Api;
 
 public class LinkShrinkDbContext : DbContext
 {
-    public LinkShrinkDbContext(DbContextOptions<LinkShrinkDbContext> options) 
-        : base(options) { }
+    public LinkShrinkDbContext(DbContextOptions<LinkShrinkDbContext> options) : base(options)
+    {
+        Database.EnsureCreated();
+    }
 
     public DbSet<Link> Links { get; set; }
 }
