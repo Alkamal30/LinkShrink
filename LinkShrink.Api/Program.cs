@@ -1,4 +1,10 @@
+using LinkShrink.Api;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<LinkShrinkDbContext>(
+    options => options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
