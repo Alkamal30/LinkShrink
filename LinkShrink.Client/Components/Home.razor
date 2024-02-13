@@ -1,0 +1,57 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@rendermode RenderMode.InteractiveServer
+@inject IJSRuntime JSRuntime
+
+<div class="home">
+    <div class="link-input">
+        <div class="link-input__container @HoveredClass" 
+            @onmouseover="@SetHoveredClass" 
+            @onmouseout="@RemoveHoveredClass"
+            @onfocusout="@RemoveHoveredClass">
+
+            <input class="link-input__input" 
+                value="@InputValue"
+                @oninput="InputChanged"/>
+        </div>
+        <button class="link-input__button @(IsShrinkButtonVisible ? "link-input__button_visible" : "")">
+            Shrink
+        </button>
+    </div>
+</div>
+
+<script>
+    window.removeFocus = function () {
+        document.activeElement.blur();
+    }
+</script>
+
+@code {
+    string InputValue { get; set; } = string.Empty;
+    string HoveredClass { get; set; } = string.Empty;
+    bool IsShrinkButtonVisible { get; set; } = false;
+
+    void SetHoveredClass()
+    {
+        HoveredClass = "link-input__container_hovered";
+    }
+
+    void RemoveHoveredClass()
+    {
+        if(string.IsNullOrEmpty(InputValue))
+        {
+            HoveredClass = string.Empty;
+            RemoveFocus();
+        }
+    }
+
+    void RemoveFocus()
+    {
+        JSRuntime.InvokeVoidAsync("removeFocus");
+    }
+
+    private void InputChanged(ChangeEventArgs args)
+    {
+        InputValue = args.Value?.ToString() ?? string.Empty;
+        IsShrinkButtonVisible = InputValue != string.Empty;
+    }
+}
