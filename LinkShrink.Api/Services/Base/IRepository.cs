@@ -2,7 +2,9 @@
 
 namespace LinkShrink.Api.Services.Base;
 
-public interface IRepository<TModel, TId> where TModel : BaseModel<TId>
+public interface IRepository<TModel, TId> 
+    where TModel : BaseModel<TId> 
+    where TId : struct
 {
     Task<TModel?> GetByIdAsync(TId id);
     Task<IEnumerable<TModel>> GetAllAsync();
