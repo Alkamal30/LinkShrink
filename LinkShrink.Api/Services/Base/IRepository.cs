@@ -4,7 +4,7 @@ namespace LinkShrink.Api.Services.Base;
 
 public interface IRepository<TModel, TId> where TModel : BaseModel<TId>
 {
-    Task<TModel> GetByIdAsync(TId id);
+    Task<TModel?> GetByIdAsync(TId id);
     Task<IEnumerable<TModel>> GetAllAsync();
 
     Task AddAsync(TModel entity);
